@@ -23,7 +23,6 @@ func (h *DeviceHandler) CreateDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//createdDevice := h.service.CreateDevice(&device)
 	createdDevice, err := h.service.CreateDevice(&device)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -37,11 +36,7 @@ func (h *DeviceHandler) GetDevice(w http.ResponseWriter, r *http.Request) {
 	id := getDeviceIDFromRequest(r)
 	device, err := h.service.GetDevice(id)
 	if err != nil {
-		if errors.Is(err, services.ErrDeviceNotFound) {
-			http.Error(w, err.Error(), http.StatusNotFound)
-			return
-		}
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
@@ -56,7 +51,6 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//device := h.service.UpdateDevice(id, &updatedDevice)
 	device, err := h.service.UpdateDevice(id, &updatedDevice)
 	if err != nil {
 		if errors.Is(err, services.ErrDeviceNotFound) {
