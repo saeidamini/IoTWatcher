@@ -30,9 +30,7 @@ func (h *DeviceHandler) CreateDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(createdDevice)
+	h.ReturnHttpResponse(w, createdDevice, http.StatusCreated)
 }
 
 func (h *DeviceHandler) GetDevice(w http.ResponseWriter, r *http.Request) {
@@ -47,9 +45,7 @@ func (h *DeviceHandler) GetDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(device)
+	h.ReturnHttpResponse(w, device, http.StatusOK)
 }
 
 func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
@@ -70,10 +66,7 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(device)
+	h.ReturnHttpResponse(w, device, http.StatusOK)
 }
 
 func (h *DeviceHandler) DeleteDevice(w http.ResponseWriter, r *http.Request) {
@@ -87,10 +80,21 @@ func (h *DeviceHandler) DeleteDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	h.ReturnHttpResponse(w, nil, http.StatusNoContent)
 }
 
 func getDeviceIDFromRequest(r *http.Request) string {
 	// Example: /devices/{id}
 	return r.PathValue("id") // Device ID
+}
+
+func (h *DeviceHandler) ReturnHttpResponse(w http.ResponseWriter, createdDevice *models.Device, httpCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(httpCode)
+
+	err := json.NewEncoder(w).Encode(createdDevice)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
