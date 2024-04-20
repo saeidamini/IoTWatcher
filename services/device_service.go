@@ -12,9 +12,9 @@ var (
 )
 
 type DeviceService interface {
-	CreateDevice(device *models.Device) error
+	CreateDevice(device *models.Device) (*models.Device, error)
 	GetDevice(id string) (*models.Device, error)
-	UpdateDevice(id string, device *models.Device) error
+	UpdateDevice(id string, device *models.Device) (*models.Device, error)
 	DeleteDevice(id string) error
 }
 
@@ -32,11 +32,11 @@ func (s *deviceService) GetDevice(id string) (*models.Device, error) {
 	return s.repo.GetDevice(id)
 }
 
-func (s *deviceService) CreateDevice(device *models.Device) error {
+func (s *deviceService) CreateDevice(device *models.Device) (*models.Device, error) {
 	return s.repo.CreateDevice(device)
 }
 
-func (s *deviceService) UpdateDevice(id string, device *models.Device) error {
+func (s *deviceService) UpdateDevice(id string, device *models.Device) (*models.Device, error) {
 	return s.repo.UpdateDevice(id, device)
 }
 
