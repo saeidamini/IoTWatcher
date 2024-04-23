@@ -1,11 +1,9 @@
 package repositories
 
 import (
-	"errors"
 	"simple-api-go/models"
+	"simple-api-go/utils"
 )
-
-var ErrDeviceNotFound = errors.New("device not found")
 
 type DeviceMemoryRepository struct {
 	devices map[string]*models.Device
@@ -20,7 +18,7 @@ func NewDeviceMemoryRepository() *DeviceMemoryRepository {
 func (r *DeviceMemoryRepository) GetDevice(id string) (*models.Device, error) {
 	device, ok := r.devices[id]
 	if !ok {
-		return nil, ErrDeviceNotFound
+		return nil, utils.ErrDeviceNotFound
 	}
 	return device, nil
 }
@@ -34,7 +32,7 @@ func (r *DeviceMemoryRepository) UpdateDevice(id string, device *models.Device) 
 	_, ok := r.devices[id]
 	//_, ok := r.devices[device.ID]
 	if !ok {
-		return nil, ErrDeviceNotFound
+		return nil, utils.ErrDeviceNotFound
 	}
 	r.devices[id] = device
 	return device, nil
@@ -43,7 +41,7 @@ func (r *DeviceMemoryRepository) UpdateDevice(id string, device *models.Device) 
 func (r *DeviceMemoryRepository) DeleteDevice(id string) error {
 	_, ok := r.devices[id]
 	if !ok {
-		return ErrDeviceNotFound
+		return utils.ErrDeviceNotFound
 	}
 	delete(r.devices, id)
 	return nil

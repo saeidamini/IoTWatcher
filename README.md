@@ -1,30 +1,32 @@
-# simple-api-go
-A simple RESTful API using Go, Serverless, AWS API Gateway, Lambda, and DynamoDB.
-
-# Project specifications
+# Simple API using Go
+Here is a simple RESTful API using Go, Serverless, AWS API Gateway, Lambda, and DynamoDB.
 
 # Quick start
 To set up project follow these steps:
 
+- First install all module dependencies
 ```bash 
-# First install all module dependencies
 go mod tidy
+```
 
-# Up and run Database.
-# If you execute project locally, setup DynamoDB via docker. Otherwise on AWS you need to define Instance.
+- Up and run Database. If you execute project locally, setup DynamoDB via docker. Otherwise, on AWS you need to define Instance.
+```
 docker compose up
-## Execute bash script to define DynamoDB table and seed data at local.
+```
+
+- Execute bash script to define DynamoDB table and seed data at local.
+```
 ./schema/schema-seed-data.sh
 ```
 
-To start the server use the following command:
+- To start the server use the following command:
 ```
 go run main.go
 ```
-And open http://localhost:3322
+Finally,  open http://localhost:8080
 
 # Folder structure
-This project use common folder structure for a Go REST API project:
+This project use common folder structure for a Go REST API:
 
 ```bash
 
@@ -62,8 +64,22 @@ Here's a breakdown of the folders and files:
 
 This structure is flat and straightforward, with fewer nested folders. It's a common and widely accepted structure for smaller to medium-sized projects.
 
-# Configuration
+# Testing
+From the project’s root directory, run test:
+```bash
+go test -v ./...
 
-# Deploy on AWS
+```
+
+To view the test coverage you can run:
+```bash
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out 
+```
+
+# TODO
+- [ ] Document Project specifications
+- [ ] Document Configuration
+- [ ] Deploy on AWS
 
  

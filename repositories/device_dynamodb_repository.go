@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"simple-api-go/db"
 	"simple-api-go/models"
+	"simple-api-go/utils"
 )
 
 type DeviceDynamoRepository struct {
@@ -56,7 +57,7 @@ func (d *DeviceDynamoRepository) GetDevice(id string) (*models.Device, error) {
 	}
 
 	if result.Item == nil {
-		return nil, ErrDeviceNotFound
+		return nil, utils.ErrDeviceNotFound
 	}
 
 	device := &models.Device{}
@@ -124,7 +125,7 @@ func (d *DeviceDynamoRepository) DeleteDevice(id string) error {
 	_, err = d.db.Client.DeleteItem(input)
 	if err != nil {
 		if err.Error() == "item not found" {
-			return ErrDeviceNotFound
+			return utils.ErrDeviceNotFound
 		}
 		return err
 	}

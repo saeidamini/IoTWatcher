@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"simple-api-go/models"
 	"simple-api-go/services"
+	"simple-api-go/utils"
 )
 
 type DeviceHandler struct {
@@ -53,7 +54,7 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 
 	device, err := h.service.UpdateDevice(id, &updatedDevice)
 	if err != nil {
-		if errors.Is(err, services.ErrDeviceNotFound) {
+		if errors.Is(err, utils.ErrDeviceNotFound) {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
@@ -66,7 +67,7 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 func (h *DeviceHandler) DeleteDevice(w http.ResponseWriter, r *http.Request) {
 	id := getDeviceIDFromRequest(r)
 	if err := h.service.DeleteDevice(id); err != nil {
-		if errors.Is(err, services.ErrDeviceNotFound) {
+		if errors.Is(err, utils.ErrDeviceNotFound) {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
