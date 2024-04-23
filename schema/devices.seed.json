@@ -1,0 +1,28 @@
+{
+  "saeid-amn-Devices": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "id1" },
+          "deviceModel": { "S": "id1" },
+          "name": { "S": "Sensor" },
+          "note": { "S": "Testing a sensor." },
+          "serial": { "S": "A020000102" },
+          "createdAt": { "S": "2024-03-24T14:40:00" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "id2" },
+          "deviceModel": { "S": "id1" },
+          "name": { "S": "Camera" },
+          "note": { "S": "Testing a camera." },
+          "serial": { "S": "A020000103" },
+          "createdAt": { "S": "2024-03-25T14:40:00" }
+        }
+      }
+    }
+  ]
+}

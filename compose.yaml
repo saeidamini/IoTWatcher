@@ -1,0 +1,16 @@
+version: '3'
+
+volumes:
+  dynamodb_data:
+    driver: local
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:2.2.1
+    container_name: simple-api-dynamodb
+    restart: unless-stopped
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal
+    volumes:
+      - dynamodb_data:/home/dynamodblocal
+    ports:
+      - "8000:8000"
