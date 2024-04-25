@@ -21,7 +21,7 @@ func TestDeviceRepository(t *testing.T) {
 		//db := setupDynamoDBInstance()
 		//defer teardownDynamoDBInstance(db)
 		// TODO: make another table for test.
-		os.Setenv("DYNAMO_TABLE_NAME", "saeid-amn-Devices")
+		os.Setenv("DYNAMODB_TABLE", "saeid-amn-Devices")
 		os.Setenv("REGION", "local")
 		os.Setenv("ENDPOINT_URL", "http://localhost:8000")
 

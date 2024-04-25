@@ -20,13 +20,13 @@ func NewDeviceHandler(service services.DeviceService) *DeviceHandler {
 func (h *DeviceHandler) CreateDevice(w http.ResponseWriter, r *http.Request) {
 	var device models.Device
 	if err := json.NewDecoder(r.Body).Decode(&device); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	createdDevice, err := h.service.CreateDevice(&device)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -37,7 +37,8 @@ func (h *DeviceHandler) GetDevice(w http.ResponseWriter, r *http.Request) {
 	id := getDeviceIDFromRequest(r)
 	device, err := h.service.GetDevice(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		//utils.ErrorJSONFormat(w, err.Error(), http.StatusNotFound)
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
@@ -48,17 +49,17 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 	id := getDeviceIDFromRequest(r)
 	var updatedDevice models.Device
 	if err := json.NewDecoder(r.Body).Decode(&updatedDevice); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	device, err := h.service.UpdateDevice(id, &updatedDevice)
 	if err != nil {
 		if errors.Is(err, utils.ErrDeviceNotFound) {
-			http.Error(w, err.Error(), http.StatusNotFound)
+			utils.ErrorJSONFormat(w, err.Error(), http.StatusNotFound)
 			return
 		}
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	h.ReturnHttpResponse(w, device, http.StatusOK)
@@ -68,10 +69,10 @@ func (h *DeviceHandler) DeleteDevice(w http.ResponseWriter, r *http.Request) {
 	id := getDeviceIDFromRequest(r)
 	if err := h.service.DeleteDevice(id); err != nil {
 		if errors.Is(err, utils.ErrDeviceNotFound) {
-			http.Error(w, err.Error(), http.StatusNotFound)
+			utils.ErrorJSONFormat(w, err.Error(), http.StatusNotFound)
 			return
 		}
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -89,7 +90,7 @@ func (h *DeviceHandler) ReturnHttpResponse(w http.ResponseWriter, createdDevice 
 
 	err := json.NewEncoder(w).Encode(createdDevice)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }

@@ -41,7 +41,7 @@ func CreateDynamoDBInstance() *DynamoDBInstance {
 	sess := session.Must(session.NewSession(config))
 
 	dynamoDBClient := dynamodb.New(sess)
-	dbInstance, err := NewDynamoDBInstance(dynamoDBClient, os.Getenv("DYNAMO_TABLE_NAME"))
+	dbInstance, err := NewDynamoDBInstance(dynamoDBClient, os.Getenv("DYNAMODB_TABLE"))
 	if err != nil {
 		log.Fatalf("failed to create DynamoDB instance: %v", err)
 	}

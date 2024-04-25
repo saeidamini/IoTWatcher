@@ -20,8 +20,62 @@ func TestDeviceMemoryRepository_CreateDevice(t *testing.T) {
 		want    *models.Device
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "CreateNewDevice",
+			fields: fields{
+				devices: make(map[string]*models.Device),
+			},
+			args: args{
+				device: &models.Device{
+					ID:          "1",
+					Name:        "Device 1",
+					DeviceModel: "Model A",
+					Note:        "This is a test device",
+					Serial:      "ABC123",
+				},
+			},
+			want: &models.Device{
+				ID:          "1",
+				Name:        "Device 1",
+				DeviceModel: "Model A",
+				Note:        "This is a test device",
+				Serial:      "ABC123",
+			},
+			wantErr: false,
+		},
+		{
+			name: "CreateExistingDevice",
+			fields: fields{
+				devices: map[string]*models.Device{
+					"1": {
+						ID:          "1",
+						Name:        "Device 1",
+						DeviceModel: "Model A",
+						Note:        "This is a test device",
+						Serial:      "ABC123",
+					},
+				},
+			},
+			args: args{
+				device: &models.Device{
+					ID:          "1",
+					Name:        "Device 1",
+					DeviceModel: "Model A",
+					Note:        "This is a test device",
+					Serial:      "ABC123",
+				},
+			},
+			want: &models.Device{
+				ID:          "1",
+				Name:        "Device 1",
+				DeviceModel: "Model A",
+				Note:        "This is a test device",
+				Serial:      "ABC123",
+			},
+			wantErr: false,
+		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &DeviceMemoryRepository{
