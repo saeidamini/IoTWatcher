@@ -1,0 +1,78 @@
+service: saeid-amn-simple-api-go
+app: saeid-amn-simple-api-go
+
+frameworkVersion: "3"
+
+useDotenv: true
+configValidationMode: error
+
+provider:
+  name: aws
+  runtime: provided.al2023
+  apiName: saeid-amn-simple-api-go
+  endpointType: EDGE
+  stage: ${opt:stage, 'prod'}
+  region: us-east-1
+  environment:
+    REGION: ${env:REGION}
+    ENDPOINT_URL: ${env:ENDPOINT_URL}
+    ACCESS_KEY_ID: ${env:ACCESS_KEY_ID}
+    SECRET_ACCESS_KEY: ${env:SECRET_ACCESS_KEY}
+    DATABASE_TYPE: 'dynamodb'
+    RUNNING_MODE: 'aws'
+    DYNAMODB_TABLE: ${env:DYNAMODB_TABLE}
+
+  logs:
+    httpApi:
+      format: '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "routeKey":"$context.routeKey", "status":"$context.status","protocol":"$context.protocol", "responseLength":"$context.responseLength" }'
+    restApi:
+      # Enables HTTP access logs (default: true)
+      accessLogging: true
+      format: 'requestId: $context.requestId'
+#
+  iam:
+    role: ${env:IAM_ROLE}
+
+functions:
+  list:
+    handler: bootstrap
+    events:
+      - httpApi:
+          path: /api/devices/
+          method: get
+          cors:
+            origin: '*'
+          allowCredentials: false
+
+  get:
+    handler: bootstrap
+    events:
+      - httpApi:
+          path: /api/devices/{id}
+          method: get
+          cors:
+            origin: '*'
+          allowCredentials: false
+
+  create:
+    handler: bootstrap
+    events:
+      - httpApi:
+          path: /api/devices
+          method: post
+          cors:
+            origin: '*'
+          allowCredentials: false
+
+  update:
+    handler: bootstrap
+    events:
+      - httpApi:
+          path: /api/devices/{id}
+          method: put
+          cors:
+            origin: '*'
+          allowCredentials: false
+
+package:
+    - ./bootstrap

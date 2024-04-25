@@ -104,10 +104,12 @@ go tool cover -html=coverage.out
 ```
 
 # TODO
-- [*] Document Project specifications
-- [*] Document Configuration
-- [*] Deploy on AWS
+- [+] Document Project specifications
+- [+] Document Configuration
+- [+] Deploy on AWS
 - [ ] Validations
 - [ ] Add test cases.
+- [ ] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
+- [ ] Add AWS::IAM::Role via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-graphql-and-rds/resource/LambdaRole.yml).
 
  

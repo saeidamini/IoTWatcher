@@ -37,9 +37,9 @@ func main() {
 		log.Println("Starting server on " + serverInstance)
 		log.Fatal(http.ListenAndServe(serverInstance, router))
 	case "aws":
-	default:
 		lambda.Start(httpadapter.New(router).ProxyWithContext)
-		//lambda.Start(handlers.LambdaHandler)
+	default:
+		log.Fatalf("Could not runnig application.")
 	}
 }
 
