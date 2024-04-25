@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
 	_ "github.com/joho/godotenv/autoload"
 	"log"
 	"net/http"
@@ -29,9 +31,16 @@ func main() {
 
 	router := routes.SetupRoutes(deviceHandler)
 
-	serverInstance := os.Getenv("SERVER_HOST") + ":" + os.Getenv("SERVER_PORT")
-	log.Println("Starting server on " + serverInstance)
-	log.Fatal(http.ListenAndServe(serverInstance, router))
+	switch os.Getenv("RUNNING_MODE") {
+	case "local":
+		serverInstance := os.Getenv("SERVER_HOST") + ":" + os.Getenv("SERVER_PORT")
+		log.Println("Starting server on " + serverInstance)
+		log.Fatal(http.ListenAndServe(serverInstance, router))
+	case "aws":
+	default:
+		lambda.Start(httpadapter.New(router).ProxyWithContext)
+		//lambda.Start(handlers.LambdaHandler)
+	}
 }
 
 func NewDeviceRepository() (repositories.DeviceRepository, error) {

@@ -1,7 +1,24 @@
 # Simple API using Go
 Here is a simple RESTful API using Go, Serverless, AWS API Gateway, Lambda, and DynamoDB.
 
-# Quick start
+# Requirements
+- [Go 1.20+](https://go.dev/doc/install) 
+- [GNU Make 4+](https://www.gnu.org/software/make/) (optional for automatically commands)
+- [Serverless 3+](https://www.serverless.com/framework/docs-getting-started) (optional for automatic deploy on aws)
+
+# Quick start 
+## Easy start
+You can start project locally with this command:
+```
+make run-local
+```
+
+Or deploy on AWS with:
+``` 
+make deply
+```
+
+## Manually
 To set up project follow these steps:
 
 - First install all module dependencies
@@ -11,7 +28,7 @@ go mod tidy
 
 - Up and run Database. If you execute project locally, setup DynamoDB via docker. Otherwise, on AWS you need to define Instance.
 ```
-docker compose up
+docker compose up -d
 ```
 
 - Execute bash script to define DynamoDB table and seed data at local.
@@ -23,7 +40,16 @@ docker compose up
 ```
 go run main.go
 ```
-Finally,  open http://localhost:8080
+Finally,  send request to  http://localhost:8080/api/devices/ and get response. 
+
+# Deploy on AWS
+To deploy on aws:
+``` 
+make deply
+```
+
+Note: For serverless configuration, this document is good resources: [Serverless aws-golang-rest-api-with-dynamodb](https://github.com/serverless/examples/blob/v3/aws-golang-rest-api-with-dynamodb/serverless.yml)
+
 
 # Folder structure
 This project use common folder structure for a Go REST API:
@@ -78,8 +104,10 @@ go tool cover -html=coverage.out
 ```
 
 # TODO
-- [ ] Document Project specifications
-- [ ] Document Configuration
-- [ ] Deploy on AWS
+- [*] Document Project specifications
+- [*] Document Configuration
+- [*] Deploy on AWS
+- [ ] Validations
+- [ ] Add test cases.
 
  

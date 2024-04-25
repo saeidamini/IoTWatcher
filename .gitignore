@@ -21,4 +21,6 @@
 go.work
 
 # Project build files
-./simple-api-go
+./bin/*
+bootstrap
+/.serverless/*
