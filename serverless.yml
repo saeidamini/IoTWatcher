@@ -40,9 +40,6 @@ functions:
       - httpApi:
           path: /api/devices/
           method: get
-          cors:
-            origin: '*'
-          allowCredentials: false
 
   get:
     handler: bootstrap
@@ -50,9 +47,6 @@ functions:
       - httpApi:
           path: /api/devices/{id}
           method: get
-          cors:
-            origin: '*'
-          allowCredentials: false
 
   create:
     handler: bootstrap
@@ -60,9 +54,6 @@ functions:
       - httpApi:
           path: /api/devices
           method: post
-          cors:
-            origin: '*'
-          allowCredentials: false
 
   update:
     handler: bootstrap
@@ -70,9 +61,9 @@ functions:
       - httpApi:
           path: /api/devices/{id}
           method: put
-          cors:
-            origin: '*'
-          allowCredentials: false
-
 package:
+   patterns:
+    - '!/**'
     - ./bootstrap
+
+

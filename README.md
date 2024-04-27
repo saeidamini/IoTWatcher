@@ -8,15 +8,18 @@ Here is a simple RESTful API using Go, Serverless, AWS API Gateway, Lambda, and 
 
 # Quick start 
 ## Easy start
-You can start project locally with this command:
+First copy `.env.example` as `.env`(for local) or `.en.prod`(for production and AWS) and change proper configuration.
+
+You can start project **locally** with this command:
 ```
 make run-local
 ```
 
-Or deploy on AWS with:
+Or deploy on **AWS** with:
 ``` 
 make deply
 ```
+Note: For serverless configuration, this document is good resources: [Serverless aws-golang-rest-api-with-dynamodb](https://github.com/serverless/examples/blob/v3/aws-golang-rest-api-with-dynamodb/serverless.yml)
 
 ## Manually
 To set up project follow these steps:
@@ -40,15 +43,41 @@ docker compose up -d
 ```
 go run main.go
 ```
-Finally,  send request to  http://localhost:8080/api/devices/ and get response. 
+Finally,  send request locally to  `http://localhost:8080/api/devices/` and get response. for AWS use `https://<api-gateway-url>/api/devices/`
 
-# Deploy on AWS
-To deploy on aws:
-``` 
-make deply
+# CRUD Operations : Testing endpoint API
+After running application you can access to CRUD urls:
+
+```bash
+# Create new devices
+curl --header "Content-Type: application/json" \               
+  --request POST \
+  --data '{"id":"id4","deviceModel":"id1","name":"Camera","note":"Testing a camera","serial":"A020000103"}' \
+  https://<api-url>/api/devices
+
+# Read a device info
+curl --header "Content-Type: application/json" \               
+  --request GET \
+  https://<api-url>/api/devices/id4
+  
+# Update a device info
+curl --header "Content-Type: application/json" \               
+  --request PUT \
+  --data '{"deviceModel":"id1","name":"Camera New","note":"Testing a new camera","serial":"A020000103"}' \
+  https://<api-url>/api/devices/id4
+
+# Delete a device
+curl --header "Content-Type: application/json" \               
+  --request DELETE \
+  https://<api-url>/api/devices/id4
+
+# List all devices
+curl --header "Content-Type: application/json" \
+  --request GET \
+  https://<api-url>/api/devices/
+
+  
 ```
-
-Note: For serverless configuration, this document is good resources: [Serverless aws-golang-rest-api-with-dynamodb](https://github.com/serverless/examples/blob/v3/aws-golang-rest-api-with-dynamodb/serverless.yml)
 
 
 # Folder structure
@@ -104,11 +133,11 @@ go tool cover -html=coverage.out
 ```
 
 # TODO
-- [+] Document Project specifications
-- [+] Document Configuration
-- [+] Deploy on AWS
-- [ ] Validations
-- [ ] Add test cases.
+- [+] Writing project specifications documentation.
+- [+] Writing configuration document. 
+- [+] How to Deploy on AWS.
+- [ ] Validating input value.
+- [ ] Improve the unit test  by adding more cases.
 - [ ] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
 - [ ] Add AWS::IAM::Role via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-graphql-and-rds/resource/LambdaRole.yml).
 

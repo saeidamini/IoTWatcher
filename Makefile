@@ -1,4 +1,4 @@
-.PHONY: build seed run-local clean deploy
+.PHONY: build seed run-local clean clean-aws deploy
 
 build:
 	go mod tidy
@@ -15,5 +15,8 @@ seed:
 clean:
 	rm -rf ./bin ./vendor Gopkg.lock
 
-deploy: clean build
-	serverless deploy --verbose
+clean-aws:
+	sls remove --stage prod
+
+deploy: clean clean-aws build
+	serverless deploy --stage prod
