@@ -4,14 +4,14 @@ app: saeid-amn-simple-api-go
 frameworkVersion: "3"
 
 useDotenv: true
-configValidationMode: error
+# configValidationMode: error
 
 provider:
   name: aws
   runtime: provided.al2023
   apiName: saeid-amn-simple-api-go
   endpointType: EDGE
-  stage: ${opt:stage, 'prod'}
+  #  stage: ${opt:stage, 'prod'}
   region: us-east-1
   environment:
     REGION: ${env:REGION}
@@ -22,48 +22,65 @@ provider:
     RUNNING_MODE: 'aws'
     DYNAMODB_TABLE: ${env:DYNAMODB_TABLE}
 
-  logs:
-    httpApi:
-      format: '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "routeKey":"$context.routeKey", "status":"$context.status","protocol":"$context.protocol", "responseLength":"$context.responseLength" }'
-    restApi:
-      # Enables HTTP access logs (default: true)
-      accessLogging: true
-      format: 'requestId: $context.requestId'
+#  logs:
+#    http:
+#      format: '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "routeKey":"$context.routeKey", "status":"$context.status","protocol":"$context.protocol", "responseLength":"$context.responseLength" }'
+#    restApi:
+# Enables HTTP access logs (default: true)
+#      accessLogging: true
+#      format: 'requestId: $context.requestId'
 #
   iam:
     role: ${env:IAM_ROLE}
 
 functions:
   list:
-    handler: bootstrap
+    handler: main
     events:
-      - httpApi:
-          path: /api/devices/
+      - http:
+          path: /api/devices
           method: get
 
   get:
-    handler: bootstrap
+    handler: main
     events:
-      - httpApi:
+      - http:
           path: /api/devices/{id}
           method: get
 
   create:
-    handler: bootstrap
+    handler: main
     events:
-      - httpApi:
+      - http:
           path: /api/devices
           method: post
 
-  update:
-    handler: bootstrap
+  delete:
+    handler: main
     events:
-      - httpApi:
+      - http:
           path: /api/devices/{id}
-          method: put
+          method: delete
+
+
 package:
-   patterns:
+  patterns:
     - '!/**'
-    - ./bootstrap
+    - bootstrap
 
-
+#resources:
+#  Resources:
+#    TodosDynamoDbTable:
+#      Type: 'AWS::DynamoDB::Table'
+#      DeletionPolicy: Delete
+#      Properties:
+#        AttributeDefinitions:
+#          -
+#            AttributeName: id
+#            AttributeType: S
+#        KeySchema:
+#          -
+#            AttributeName: id
+#            KeyType: HASH
+#        BillingMode: PAY_PER_REQUEST
+#        TableName: ${self:provider.environment.DYNAMODB_TABLE}
