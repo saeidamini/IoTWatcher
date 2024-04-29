@@ -18,5 +18,5 @@ clean:
 clean-aws:
 	sls remove --stage prod
 
-deploy: clean clean-aws build
+deploy: clean  build
 	serverless deploy --stage prod

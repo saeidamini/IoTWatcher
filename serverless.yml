@@ -1,5 +1,5 @@
 service: saeid-amn-simple-api-go
-app: saeid-amn-simple-api-go
+app: ${self:service}
 
 frameworkVersion: "3"
 
@@ -9,7 +9,7 @@ useDotenv: true
 provider:
   name: aws
   runtime: provided.al2023
-  apiName: saeid-amn-simple-api-go
+  apiName: ${self:service}
   endpointType: EDGE
   #  stage: ${opt:stage, 'prod'}
   region: us-east-1
@@ -34,25 +34,23 @@ provider:
     role: ${env:IAM_ROLE}
 
 functions:
-  list:
+  create:
     handler: main
     events:
       - http:
-          path: /api/devices
-          method: get
-
+          path: /api/devices/
+          method: post
   get:
     handler: main
     events:
       - http:
           path: /api/devices/{id}
           method: get
-
-  create:
+  update:
     handler: main
     events:
       - http:
-          path: /api/devices
+          path: /api/devices/{id}
           method: post
 
   delete:
@@ -61,7 +59,12 @@ functions:
       - http:
           path: /api/devices/{id}
           method: delete
-
+#  list:
+#    handler: main
+#    events:
+#      - http:
+#          path: /api/devices
+#          method: get
 
 package:
   patterns:
