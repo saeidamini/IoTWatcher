@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"regexp"
 	"simple-api-go/models"
 	"simple-api-go/services"
 	"simple-api-go/utils"
@@ -20,6 +21,11 @@ func NewDeviceHandler(service services.DeviceService) *DeviceHandler {
 func (h *DeviceHandler) CreateDevice(w http.ResponseWriter, r *http.Request) {
 	var device models.Device
 	if err := json.NewDecoder(r.Body).Decode(&device); err != nil {
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err := validateDevice(device); err != nil {
 		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -49,6 +55,11 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 	id := getDeviceIDFromRequest(r)
 	var updatedDevice models.Device
 	if err := json.NewDecoder(r.Body).Decode(&updatedDevice); err != nil {
+		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err := validateDevice(updatedDevice); err != nil {
 		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -93,4 +104,34 @@ func (h *DeviceHandler) ReturnHttpResponse(w http.ResponseWriter, createdDevice 
 		utils.ErrorJSONFormat(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func validateDevice(device models.Device) error {
+	// Check for required fields
+	// Validate the format of the Serial field
+	alphaNumericRegex := regexp.MustCompile(`^[A-Za-z0-9]+$`)
+	if !alphaNumericRegex.MatchString(device.ID) {
+		return errors.New("invalid ID format, It's must be alphameric format. ")
+	}
+
+	if device.Name == "" {
+		return errors.New("device name is required")
+	}
+
+	if device.DeviceModel == "" {
+		return errors.New("device model is required")
+	}
+
+	// Sanitize input fields
+	device.Name = utils.SanitizeInput(device.Name)
+	device.DeviceModel = utils.SanitizeInput(device.DeviceModel)
+	device.Note = utils.SanitizeInput(device.Note)
+	device.Serial = utils.SanitizeInput(device.Serial)
+
+	// Validate the format of the Serial field
+	if !alphaNumericRegex.MatchString(device.Serial) {
+		return errors.New("invalid serial format, It's must be alphameric format. ")
+	}
+
+	return nil
 }

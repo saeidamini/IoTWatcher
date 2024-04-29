@@ -53,7 +53,7 @@ After running application you can access to CRUD urls:
 curl --header "Content-Type: application/json" \               
   --request POST \
   --data '{"id":"id4","deviceModel":"id1","name":"Camera","note":"Testing a camera","serial":"A020000103"}' \
-  https://<api-url>/api/devices
+  https://<api-url>/api/devices/
 
 # Read a device info
 curl --header "Content-Type: application/json" \               
@@ -136,9 +136,12 @@ go tool cover -html=coverage.out
 - [+] Writing project specifications documentation.
 - [+] Writing configuration document. 
 - [+] How to Deploy on AWS.
-- [ ] Validating input value.
+- [+] Validating and sanitize user's input.
 - [ ] Improve the unit test  by adding more cases.
+
+## Medium priority 
 - [ ] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
+- [ ] Add list method to service and repository.
 - [ ] Add AWS::IAM::Role via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-graphql-and-rds/resource/LambdaRole.yml).
 
  
