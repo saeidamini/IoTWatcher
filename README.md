@@ -154,16 +154,15 @@ go tool cover -html=coverage.out
 ```
 
 # TODO
-- [+] Writing project specifications documentation.
-- [+] Writing configuration document. 
-- [+] How to Deploy on AWS.
-- [+] Validating and sanitize user's input.
+- [*] Writing project specifications documentation.
+- [*] Writing configuration document. 
+- [*] How to Deploy on AWS.
+- [*] Validating and sanitize user's input.
+- [*] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
+- [*] Improve the `TestDeviceMemory` unit tests by adding more cases.
 
 ## Medium priority 
-- [ ] Improve the `TestDeviceMemory` unit tests by adding more cases.
-- [ ] Add `handler.ListDevice` method to corresponding files.
-- [ ] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
-- [ ] Add list method to service and repository.
+- [ ] Add `handler.ListDevice` method to service and repository.
 - [ ] Add AWS::IAM::Role via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-graphql-and-rds/resource/LambdaRole.yml).
 
  
