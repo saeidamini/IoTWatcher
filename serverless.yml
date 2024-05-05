@@ -14,7 +14,7 @@ provider:
   region: ${env:REGION, 'us-east-1'}
   iam:
     role: ${env:IAM_ROLE}
-    # TODO: need to solve user permission which is not authorized to perform: iam:TagRole.
+    # Improve: need to solve user permission which is not authorized to perform: iam:TagRole.
     # role: LambdaRole
   environment:
     REGION: ${env:REGION, 'us-east-1'}
