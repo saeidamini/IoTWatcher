@@ -154,12 +154,12 @@ go tool cover -html=coverage.out
 ```
 
 # TODO
-- [*] Writing project specifications documentation.
-- [*] Writing configuration document. 
-- [*] How to Deploy on AWS.
-- [*] Validating and sanitize user's input.
-- [*] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
-- [*] Improve the `TestDeviceMemory` unit tests by adding more cases.
+- [x] Writing project specifications documentation.
+- [x] Writing configuration document. 
+- [x] How to Deploy on AWS.
+- [x] Validating and sanitize user's input.
+- [x] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
+- [x] Improve the `TestDeviceMemory` unit tests by adding more cases.
 
 ## Medium priority 
 - [ ] Add `handler.ListDevice` method to service and repository.
