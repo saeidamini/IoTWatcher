@@ -4,34 +4,26 @@ app: ${self:service}
 frameworkVersion: "3"
 
 useDotenv: true
-# configValidationMode: error
 
 provider:
   name: aws
   runtime: provided.al2023
   apiName: ${self:service}
   endpointType: EDGE
-  #  stage: ${opt:stage, 'prod'}
-  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  region: ${env:REGION, 'us-east-1'}
+  iam:
+    role: ${env:IAM_ROLE}
+    # TODO: need to solve user permission which is not authorized to perform: iam:TagRole.
+    # role: LambdaRole
   environment:
-    REGION: ${env:REGION}
+    REGION: ${env:REGION, 'us-east-1'}
     ENDPOINT_URL: ${env:ENDPOINT_URL}
     ACCESS_KEY_ID: ${env:ACCESS_KEY_ID}
     SECRET_ACCESS_KEY: ${env:SECRET_ACCESS_KEY}
     DATABASE_TYPE: 'dynamodb'
     RUNNING_MODE: 'aws'
-    DYNAMODB_TABLE: ${env:DYNAMODB_TABLE}
-
-#  logs:
-#    http:
-#      format: '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "routeKey":"$context.routeKey", "status":"$context.status","protocol":"$context.protocol", "responseLength":"$context.responseLength" }'
-#    restApi:
-# Enables HTTP access logs (default: true)
-#      accessLogging: true
-#      format: 'requestId: $context.requestId'
-#
-  iam:
-    role: ${env:IAM_ROLE}
+    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}
 
 functions:
   create:
@@ -40,6 +32,13 @@ functions:
       - http:
           path: /api/devices/
           method: post
+# Improve: Add `handler.ListDevice` method.
+#  list:
+#    handler: main
+#    events:
+#      - http:
+#          path: /api/devices/
+#          method: get
   get:
     handler: main
     events:
@@ -51,39 +50,36 @@ functions:
     events:
       - http:
           path: /api/devices/{id}
-          method: post
-
+          method: put
   delete:
     handler: main
     events:
       - http:
           path: /api/devices/{id}
           method: delete
-#  list:
-#    handler: main
-#    events:
-#      - http:
-#          path: /api/devices
-#          method: get
 
 package:
   patterns:
     - '!/**'
     - bootstrap
 
-#resources:
-#  Resources:
-#    TodosDynamoDbTable:
-#      Type: 'AWS::DynamoDB::Table'
-#      DeletionPolicy: Delete
-#      Properties:
-#        AttributeDefinitions:
-#          -
-#            AttributeName: id
-#            AttributeType: S
-#        KeySchema:
-#          -
-#            AttributeName: id
-#            KeyType: HASH
-#        BillingMode: PAY_PER_REQUEST
-#        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+resources:
+  Resources:
+    # Improve: need to solve user permission.
+    # LambdaRole: ${file(./resource/LambdaRole.yml)}
+    TodosDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

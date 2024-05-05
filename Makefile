@@ -1,4 +1,4 @@
-.PHONY: build seed run-local clean clean-aws deploy
+.PHONY: build seed run-local clean deploy
 
 build:
 	go mod tidy
@@ -13,10 +13,8 @@ seed:
 	./schema/schema-seed-data.sh
 
 clean:
-	rm -rf ./bin ./vendor Gopkg.lock
-
-clean-aws:
-	sls remove --stage prod
+	-rm -rf ./bin ./vendor Gopkg.lock
+	-sls remove --stage dev
 
 deploy: clean  build
-	serverless deploy --stage prod
+	serverless deploy --stage dev

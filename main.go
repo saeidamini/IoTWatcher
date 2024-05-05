@@ -16,6 +16,10 @@ import (
 	"simple-api-go/services"
 )
 
+var (
+	ErrInvalidDatabaseType = errors.New("invalid database type")
+)
+
 func main() {
 	fmt.Println("Simple API!")
 
@@ -52,6 +56,6 @@ func NewDeviceRepository() (repositories.DeviceRepository, error) {
 		dbInstance := db.CreateDynamoDBInstance()
 		return repositories.NewDynamoDeviceService(dbInstance), nil
 	default:
-		return nil, errors.New("invalid database type")
+		return nil, ErrInvalidDatabaseType
 	}
 }

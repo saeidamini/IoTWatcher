@@ -59,6 +59,7 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	updatedDevice.ID = id
 	if err := validateDevice(updatedDevice); err != nil {
 		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
 		return
@@ -107,8 +108,8 @@ func (h *DeviceHandler) ReturnHttpResponse(w http.ResponseWriter, createdDevice 
 }
 
 func validateDevice(device models.Device) error {
-	// Check for required fields
-	// Validate the format of the Serial field
+	// Check for required fields. Validate the format of the Serial field
+	// Improve: Merge multiple errors.
 	alphaNumericRegex := regexp.MustCompile(`^[A-Za-z0-9]+$`)
 	if !alphaNumericRegex.MatchString(device.ID) {
 		return errors.New("invalid ID format, It's must be alphameric format. ")

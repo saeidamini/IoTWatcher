@@ -1,6 +1,16 @@
 # Simple API using Go
 Here is a simple RESTful API using Go, Serverless, AWS API Gateway, Lambda, and DynamoDB.
 
+# Highlights features
+- Follow Clean Architecture discipline for code structure and naming.
+-  Running with multiple configurations:
+    - Database : Memory or DynamoDb.
+    - API gateway : Local, or Amazon API gateway+ Lambda.
+- More than 70% test code coverage at high priority files.
+- Easy start with GNU Make.
+- Automated deployment via Serverless framework.
+- Every important topics is well documented.
+
 # Requirements
 - [Go 1.20+](https://go.dev/doc/install) 
 - [GNU Make 4+](https://www.gnu.org/software/make/) (optional for automatically commands)
@@ -50,31 +60,42 @@ After running application you can access to CRUD urls:
 
 ```bash
 # Create new devices
-curl --header "Content-Type: application/json" \               
-  --request POST \
-  --data '{"id":"id4","deviceModel":"id1","name":"Camera","note":"Testing a camera","serial":"A020000103"}' \
-  https://<api-url>/api/devices/
+curl --header "Content-Type: application/json" \
+ --request POST \
+ --data '{"id":"id4","deviceModel":"id1","name":"Camera","note":"Testing a camera","serial":"A020000103"}' \
+ --url https://<api-url>/api/devices/
 
+# HTTP 400 Bad Request, id invalid, and name is empty
+curl --header "Content-Type: application/json" \
+ --request POST \
+ --data '{"id":"id r4","deviceModel":"id1","note":"Testing a camera","serial":"A020000103"}' \
+ --url https://<api-url>/api/devices/
+ 
 # Read a device info
-curl --header "Content-Type: application/json" \               
-  --request GET \
-  https://<api-url>/api/devices/id4
-  
+curl --header "Content-Type: application/json" \
+ --request GET \
+ --url https://<api-url>/api/devices/id4
+
 # Update a device info
-curl --header "Content-Type: application/json" \               
-  --request PUT \
-  --data '{"deviceModel":"id1","name":"Camera New","note":"Testing a new camera","serial":"A020000103"}' \
-  https://<api-url>/api/devices/id4
+curl --header "Content-Type: application/json" \
+ --request PUT \
+ --data '{"deviceModel":"id1","name":"Camera","note":"NEW Testing a camera","serial":"A020000103"}' \
+ --url https://<api-url>/api/devices/id4
+
+# Check changed info 
+curl --header "Content-Type: application/json" \
+ --request GET \
+ --url https://<api-url>/api/devices/id4
 
 # Delete a device
-curl --header "Content-Type: application/json" \               
-  --request DELETE \
-  https://<api-url>/api/devices/id4
-
-# List all devices
 curl --header "Content-Type: application/json" \
-  --request GET \
-  https://<api-url>/api/devices/
+ --request DELETE  \
+ --url https://<api-url>/api/devices/id4
+
+ # Get 404 Not found 
+curl --header "Content-Type: application/json" \
+ --request GET \
+ --url https://<api-url>/api/devices/id4
 
   
 ```
@@ -140,6 +161,7 @@ go tool cover -html=coverage.out
 
 ## Medium priority 
 - [ ] Improve the `TestDeviceMemory` unit tests by adding more cases.
+- [ ] Add `handler.ListDevice` method to corresponding files.
 - [ ] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
 - [ ] Add list method to service and repository.
 - [ ] Add AWS::IAM::Role via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-graphql-and-rds/resource/LambdaRole.yml).
