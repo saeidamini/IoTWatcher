@@ -6,14 +6,15 @@ import (
 	"testing"
 )
 
+type fields struct {
+	devices map[string]*models.Device
+}
+type args struct {
+	device *models.Device
+}
+
 func TestDeviceMemoryRepository_CreateDevice(t *testing.T) {
-	type fields struct {
-		devices map[string]*models.Device
-	}
-	type args struct {
-		device *models.Device
-	}
-	tests := []struct {
+	testsCreate := []struct {
 		name    string
 		fields  fields
 		args    args
@@ -76,7 +77,7 @@ func TestDeviceMemoryRepository_CreateDevice(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testsCreate {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &DeviceMemoryRepository{
 				devices: tt.fields.devices,
@@ -93,55 +94,49 @@ func TestDeviceMemoryRepository_CreateDevice(t *testing.T) {
 	}
 }
 
-func TestDeviceMemoryRepository_DeleteDevice(t *testing.T) {
-	type fields struct {
-		devices map[string]*models.Device
-	}
-	type args struct {
-		id string
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := &DeviceMemoryRepository{
-				devices: tt.fields.devices,
-			}
-			if err := r.DeleteDevice(tt.args.id); (err != nil) != tt.wantErr {
-				t.Errorf("DeleteDevice() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
 func TestDeviceMemoryRepository_GetDevice(t *testing.T) {
-	type fields struct {
-		devices map[string]*models.Device
-	}
-	type args struct {
-		id string
-	}
-	tests := []struct {
+	testsGet := []struct {
 		name    string
 		fields  fields
 		args    args
 		want    *models.Device
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "GetExistingDevice",
+			fields: fields{
+				devices: map[string]*models.Device{
+					"1": {
+						ID:          "1",
+						Name:        "Device 1",
+						DeviceModel: "Model A",
+						Note:        "This is a test device",
+						Serial:      "ABC123",
+					},
+				},
+			},
+			args: args{
+				device: &models.Device{
+					ID: "1",
+				},
+			},
+			want: &models.Device{
+				ID:          "1",
+				Name:        "Device 1",
+				DeviceModel: "Model A",
+				Note:        "This is a test device",
+				Serial:      "ABC123",
+			},
+			wantErr: false,
+		},
 	}
-	for _, tt := range tests {
+
+	for _, tt := range testsGet {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &DeviceMemoryRepository{
 				devices: tt.fields.devices,
 			}
-			got, err := r.GetDevice(tt.args.id)
+			got, err := r.GetDevice(tt.args.device.ID)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetDevice() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -154,28 +149,48 @@ func TestDeviceMemoryRepository_GetDevice(t *testing.T) {
 }
 
 func TestDeviceMemoryRepository_UpdateDevice(t *testing.T) {
-	type fields struct {
-		devices map[string]*models.Device
-	}
-	type args struct {
-		id     string
-		device *models.Device
-	}
-	tests := []struct {
+	testsUpdate := []struct {
 		name    string
 		fields  fields
 		args    args
 		want    *models.Device
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "UpdateExistingDevice",
+			fields: fields{
+				devices: map[string]*models.Device{
+					"1": {
+						ID: "1",
+					},
+				},
+			},
+			args: args{
+				device: &models.Device{
+					ID:          "1",
+					Name:        "New Device 1",
+					DeviceModel: "New Model A",
+					Note:        "New This is a test device",
+					Serial:      "NewABC123",
+				},
+			},
+			want: &models.Device{
+				ID:          "1",
+				Name:        "New Device 1",
+				DeviceModel: "New Model A",
+				Note:        "New This is a test device",
+				Serial:      "NewABC123",
+			},
+			wantErr: false,
+		},
 	}
-	for _, tt := range tests {
+
+	for _, tt := range testsUpdate {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &DeviceMemoryRepository{
 				devices: tt.fields.devices,
 			}
-			got, err := r.UpdateDevice(tt.args.id, tt.args.device)
+			got, err := r.UpdateDevice(tt.args.device.ID, tt.args.device)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("UpdateDevice() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -187,17 +202,39 @@ func TestDeviceMemoryRepository_UpdateDevice(t *testing.T) {
 	}
 }
 
-func TestNewDeviceMemoryRepository(t *testing.T) {
-	tests := []struct {
-		name string
-		want *DeviceMemoryRepository
+func TestDeviceMemoryRepository_DeleteDevice(t *testing.T) {
+	testDelete := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    *models.Device
+		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "DeleteExistingDevice",
+			fields: fields{
+				devices: map[string]*models.Device{
+					"1": {
+						ID: "1",
+					},
+				},
+			},
+			args: args{
+				device: &models.Device{
+					ID: "1",
+				},
+			},
+			wantErr: false,
+		},
 	}
-	for _, tt := range tests {
+
+	for _, tt := range testDelete {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewDeviceMemoryRepository(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewDeviceMemoryRepository() = %v, want %v", got, tt.want)
+			r := &DeviceMemoryRepository{
+				devices: tt.fields.devices,
+			}
+			if err := r.DeleteDevice(tt.args.device.ID); (err != nil) != tt.wantErr {
+				t.Errorf("DeleteDevice() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
