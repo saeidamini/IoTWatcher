@@ -1,7 +1,7 @@
 # Simple API using Go
 Here is a simple RESTful API using Go, Serverless, AWS API Gateway, Lambda, and DynamoDB.
 
-# Highlights features
+## Highlights features
 - Follow Clean Architecture discipline for code structure and naming.
 -  Running with multiple configurations:
     - Database : Memory or DynamoDb.
@@ -11,13 +11,13 @@ Here is a simple RESTful API using Go, Serverless, AWS API Gateway, Lambda, and 
 - Automated deployment via Serverless framework.
 - Every important topics is well documented.
 
-# Requirements
+## Requirements
 - [Go 1.20+](https://go.dev/doc/install) 
 - [GNU Make 4+](https://www.gnu.org/software/make/) (optional for automatically commands)
 - [Serverless 3+](https://www.serverless.com/framework/docs-getting-started) (optional for automatic deploy on aws)
 
-# Quick start 
-## Easy start
+## Quick start 
+### Easy start
 First copy `.env.example` as `.env`(for local) or `.en.prod`(for production and AWS) and change proper configuration.
 
 You can start project **locally** with this command:
@@ -31,7 +31,7 @@ make deply
 ```
 Note: For serverless configuration, this document is good resources: [Serverless aws-golang-rest-api-with-dynamodb](https://github.com/serverless/examples/blob/v3/aws-golang-rest-api-with-dynamodb/serverless.yml)
 
-## Manually
+### Manually
 To set up project follow these steps:
 
 - First install all module dependencies
@@ -55,7 +55,7 @@ go run main.go
 ```
 Finally,  send request locally to  `http://localhost:8080/api/devices/` and get response. for AWS use `https://<api-gateway-url>/api/devices/`
 
-# CRUD Operations : Testing endpoint API
+## CRUD Operations : Testing endpoint API
 After running application you can access to CRUD urls:
 
 ```bash
@@ -92,16 +92,15 @@ curl --header "Content-Type: application/json" \
  --request DELETE  \
  --url https://<api-url>/api/devices/id4
 
- # Get 404 Not found 
+# Get 404 Not found 
 curl --header "Content-Type: application/json" \
  --request GET \
  --url https://<api-url>/api/devices/id4
 
-  
 ```
 
 
-# Folder structure
+## Folder structure
 This project use common folder structure for a Go REST API:
 
 ```bash
@@ -140,7 +139,7 @@ Here's a breakdown of the folders and files:
 
 This structure is flat and straightforward, with fewer nested folders. It's a common and widely accepted structure for smaller to medium-sized projects.
 
-# Testing
+## Testing
 From the project’s root directory, run test:
 ```bash
 go test -v ./...
@@ -153,7 +152,7 @@ go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out 
 ```
 
-# TODO
+## TODO
 - [x] Writing project specifications documentation.
 - [x] Writing configuration document. 
 - [x] How to Deploy on AWS.
@@ -161,7 +160,7 @@ go tool cover -html=coverage.out
 - [x] Add DynamoDbTable via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-http-api-typescript-dynamodb/serverless.yml).
 - [x] Improve the `TestDeviceMemory` unit tests by adding more cases.
 
-## Medium priority 
+### Medium priority 
 - [ ] Add `handler.ListDevice` method to service and repository.
 - [ ] Add AWS::IAM::Role via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-graphql-and-rds/resource/LambdaRole.yml).
 
