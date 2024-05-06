@@ -138,6 +138,9 @@ Here's a breakdown of the folders and files:
 - `utils/utils.go`: This folder can hold any reusable utility functions or packages used across the application.
 
 This structure is flat and straightforward, with fewer nested folders. It's a common and widely accepted structure for smaller to medium-sized projects.
+Here is the
+![sequence diagram for request response](./doc/sequence-diagram-request-response.svg)
+
 
 ## Testing
 From the project’s root directory, run test:
