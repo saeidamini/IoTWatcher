@@ -29,6 +29,12 @@ func (h *DeviceHandler) CreateDevice(w http.ResponseWriter, r *http.Request) {
 		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	//Check if the device ID already exists
+	existingDevice, err := h.service.GetDevice(device.ID)
+	if err == nil && existingDevice != nil {
+		utils.ErrorJSONFormat(w, utils.ErrDeviceDuplicate.Error(), http.StatusConflict)
+		return
+	}
 
 	createdDevice, err := h.service.CreateDevice(&device)
 	if err != nil {
@@ -40,7 +46,7 @@ func (h *DeviceHandler) CreateDevice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *DeviceHandler) GetDevice(w http.ResponseWriter, r *http.Request) {
-	id := getDeviceIDFromRequest(r)
+	id := "/devices/" + getDeviceIDFromRequest(r)
 	device, err := h.service.GetDevice(id)
 	if err != nil {
 		//utils.ErrorJSONFormat(w, err.Error(), http.StatusNotFound)
@@ -52,7 +58,7 @@ func (h *DeviceHandler) GetDevice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
-	id := getDeviceIDFromRequest(r)
+	id := "/devices/" + getDeviceIDFromRequest(r)
 	var updatedDevice models.Device
 	if err := json.NewDecoder(r.Body).Decode(&updatedDevice); err != nil {
 		utils.ErrorJSONFormat(w, err.Error(), http.StatusBadRequest)
@@ -78,7 +84,7 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *DeviceHandler) DeleteDevice(w http.ResponseWriter, r *http.Request) {
-	id := getDeviceIDFromRequest(r)
+	id := "/devices/" + getDeviceIDFromRequest(r)
 	if err := h.service.DeleteDevice(id); err != nil {
 		if errors.Is(err, utils.ErrDeviceNotFound) {
 			utils.ErrorJSONFormat(w, err.Error(), http.StatusNotFound)
@@ -110,9 +116,9 @@ func (h *DeviceHandler) ReturnHttpResponse(w http.ResponseWriter, createdDevice 
 func validateDevice(device models.Device) error {
 	// Check for required fields. Validate the format of the Serial field
 	// Improve: Merge multiple errors.
-	alphaNumericRegex := regexp.MustCompile(`^[A-Za-z0-9]+$`)
-	if !alphaNumericRegex.MatchString(device.ID) {
-		return errors.New("invalid ID format, It's must be alphameric format. ")
+	deviceIDRegex := regexp.MustCompile(`^/devices/[A-Za-z0-9]+$`)
+	if !deviceIDRegex.MatchString(device.ID) {
+		return errors.New("invalid ID format, It must be in the format '/devices/alphanumeric'.")
 	}
 
 	if device.Name == "" {
@@ -122,14 +128,19 @@ func validateDevice(device models.Device) error {
 	if device.DeviceModel == "" {
 		return errors.New("device model is required")
 	}
+	deviceModelRegex := regexp.MustCompile(`^/devicemodels/[A-Za-z0-9]+$`)
+	if !deviceModelRegex.MatchString(device.DeviceModel) {
+		return errors.New("invalid DeviceModel format, It must be in the format '/devicemodels/alphanumeric'.")
+	}
 
 	// Sanitize input fields
 	device.Name = utils.SanitizeInput(device.Name)
-	device.DeviceModel = utils.SanitizeInput(device.DeviceModel)
+	//device.DeviceModel = utils.SanitizeInput(device.DeviceModel)
 	device.Note = utils.SanitizeInput(device.Note)
 	device.Serial = utils.SanitizeInput(device.Serial)
 
 	// Validate the format of the Serial field
+	alphaNumericRegex := regexp.MustCompile(`^[A-Za-z0-9]+$`)
 	if !alphaNumericRegex.MatchString(device.Serial) {
 		return errors.New("invalid serial format, It's must be alphameric format. ")
 	}

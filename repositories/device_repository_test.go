@@ -32,9 +32,9 @@ func TestDeviceRepository(t *testing.T) {
 func testDeviceRepository(t *testing.T, repo DeviceRepository) {
 	t.Run("CreateDevice", func(t *testing.T) {
 		device := &models.Device{
-			ID:          "idTest1",
+			ID:          "/devices/idTest1",
 			Name:        "Device 1",
-			DeviceModel: "Model A",
+			DeviceModel: "/devicemodels/Model2",
 			Note:        "This is a test device",
 			Serial:      "ABC123",
 		}
@@ -51,7 +51,7 @@ func testDeviceRepository(t *testing.T, repo DeviceRepository) {
 	})
 
 	t.Run("GetDevice", func(t *testing.T) {
-		device, err := repo.GetDevice("idTest1")
+		device, err := repo.GetDevice("/devices/idTest1")
 		if err != nil {
 			t.Errorf("GetDevice() error = %v", err)
 			return
@@ -64,33 +64,33 @@ func testDeviceRepository(t *testing.T, repo DeviceRepository) {
 
 	t.Run("UpdateDevice", func(t *testing.T) {
 		updatedDevice := &models.Device{
-			ID:          "idTest1",
+			ID:          "/devices/idTest1",
 			Name:        "Updated Device",
-			DeviceModel: "Model B",
+			DeviceModel: "/devicemodels/Model2",
 			Note:        "This is an updated device",
 			Serial:      "DEF456",
 		}
 
-		_, err := repo.UpdateDevice("idTest1", updatedDevice)
+		_, err := repo.UpdateDevice("/devices/idTest1", updatedDevice)
 		if err != nil {
 			t.Errorf("UpdateDevice() error = %v", err)
 			return
 		}
 
-		device, _ := repo.GetDevice("idTest1")
+		device, _ := repo.GetDevice("/devices/idTest1")
 		if device.Name != updatedDevice.Name {
 			t.Errorf("UpdateDevice() got = %v, want %v", device.Name, updatedDevice.Name)
 		}
 	})
 
 	t.Run("DeleteDevice", func(t *testing.T) {
-		err := repo.DeleteDevice("idTest1")
+		err := repo.DeleteDevice("/devices/idTest1")
 		if err != nil {
 			t.Errorf("DeleteDevice() error = %v", err)
 			return
 		}
 
-		_, err = repo.GetDevice("idTest1")
+		_, err = repo.GetDevice("/devices/idTest1")
 		if !errors.Is(err, utils.ErrDeviceNotFound) {
 			t.Errorf("DeleteDevice() device should not exist")
 		}

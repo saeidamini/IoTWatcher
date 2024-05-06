@@ -15,7 +15,8 @@ import (
 )
 
 var (
-	ErrDeviceNotFound = errors.New("device not found")
+	ErrDeviceNotFound  = errors.New("device not found")
+	ErrDeviceDuplicate = errors.New("device is duplicated")
 )
 
 type ErrorJSON struct {

@@ -30,7 +30,7 @@ functions:
     handler: main
     events:
       - http:
-          path: /api/devices/
+          path: /api/devices
           method: post
 # Improve: Add `handler.ListDevice` method.
 #  list:
