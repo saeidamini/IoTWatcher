@@ -8,6 +8,7 @@ import (
 	"simple-api-go/models"
 	"simple-api-go/services"
 	"simple-api-go/utils"
+	"strings"
 )
 
 type DeviceHandler struct {
@@ -99,7 +100,16 @@ func (h *DeviceHandler) DeleteDevice(w http.ResponseWriter, r *http.Request) {
 
 func getDeviceIDFromRequest(r *http.Request) string {
 	// Example: /devices/{id}
-	return r.PathValue("id") // Device ID
+	if len(r.PathValue("id")) > 1 {
+		return r.PathValue("id")
+	} else {
+		path := r.URL.Path
+		parts := strings.Split(path, "/")
+		if len(parts) >= 3 {
+			return parts[3]
+		}
+	}
+	return ""
 }
 
 func (h *DeviceHandler) ReturnHttpResponse(w http.ResponseWriter, createdDevice *models.Device, httpCode int) {
@@ -114,23 +124,24 @@ func (h *DeviceHandler) ReturnHttpResponse(w http.ResponseWriter, createdDevice 
 }
 
 func validateDevice(device models.Device) error {
-	// Check for required fields. Validate the format of the Serial field
-	// Improve: Merge multiple errors.
+	var errorMessages []string
+
 	deviceIDRegex := regexp.MustCompile(`^/devices/[A-Za-z0-9]+$`)
 	if !deviceIDRegex.MatchString(device.ID) {
-		return errors.New("invalid ID format, It must be in the format '/devices/alphanumeric'.")
+		errorMessages = append(errorMessages, "invalid ID format, It must be in the format '/devices/alphanumeric'")
 	}
 
 	if device.Name == "" {
-		return errors.New("device name is required")
+		errorMessages = append(errorMessages, "device name is required")
 	}
 
 	if device.DeviceModel == "" {
-		return errors.New("device model is required")
+		errorMessages = append(errorMessages, "device model is required")
 	}
+
 	deviceModelRegex := regexp.MustCompile(`^/devicemodels/[A-Za-z0-9]+$`)
 	if !deviceModelRegex.MatchString(device.DeviceModel) {
-		return errors.New("invalid DeviceModel format, It must be in the format '/devicemodels/alphanumeric'.")
+		errorMessages = append(errorMessages, "invalid DeviceModel format, It must be in the format '/devicemodels/alphanumeric'")
 	}
 
 	// Sanitize input fields
@@ -142,7 +153,11 @@ func validateDevice(device models.Device) error {
 	// Validate the format of the Serial field
 	alphaNumericRegex := regexp.MustCompile(`^[A-Za-z0-9]+$`)
 	if !alphaNumericRegex.MatchString(device.Serial) {
-		return errors.New("invalid serial format, It's must be alphameric format. ")
+		errorMessages = append(errorMessages, "invalid serial format, It's must be alphameric format")
+	}
+
+	if len(errorMessages) > 0 {
+		return errors.New(strings.Join(errorMessages, "; "))
 	}
 
 	return nil
