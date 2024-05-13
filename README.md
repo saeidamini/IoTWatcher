@@ -1,5 +1,12 @@
-# Simple API using Go
-Here is a simple RESTful API using Go, Serverless, AWS API Gateway, Lambda, and DynamoDB.
+# IoTWatcher
+IoTWatcher simplifies the process of tracking device health and identifying potential issues. 
+Operators can quickly retrieve logs for specific device states, enabling proactive maintenance and minimizing downtime. 
+Supervisors can easily monitor escalated logs, facilitating efficient resource allocation and timely issue resolution.
+
+IoTWatcher is a powerful and scalable application built using Go, Serverless, AWS API Gateway, Lambda, and DynamoDB. 
+It is designed to streamline the monitoring and management of IoT devices in smart factory environments.
+
+Note: This app is actively still in development mode.
 
 ## Highlights features
 - Follow Clean Architecture discipline for code structure and naming.
@@ -62,15 +69,15 @@ After running application you can access to CRUD urls:
 # Create new devices
 curl --header "Content-Type: application/json" \
  --request POST \
- --data '{"id":"id4","deviceModel":"id1","name":"Camera","note":"Testing a camera","serial":"A020000103"}' \
- --url https://<api-url>/api/devices/
+ --data '{"id":"/devices/id4","deviceModel":"/devicemodels/id1","name":"Camera","note":"Testing a camera","serial":"A020000103"}' \
+ --url https://<api-url>/api/devices
 
-# HTTP 400 Bad Request, id invalid, and name is empty
+# HTTP 400 Bad Request, id invalid format, and name is empty.
 curl --header "Content-Type: application/json" \
  --request POST \
  --data '{"id":"id r4","deviceModel":"id1","note":"Testing a camera","serial":"A020000103"}' \
  --url https://<api-url>/api/devices/
- 
+  
 # Read a device info
 curl --header "Content-Type: application/json" \
  --request GET \
@@ -79,7 +86,7 @@ curl --header "Content-Type: application/json" \
 # Update a device info
 curl --header "Content-Type: application/json" \
  --request PUT \
- --data '{"deviceModel":"id1","name":"Camera","note":"NEW Testing a camera","serial":"A020000103"}' \
+ --data '{"deviceModel":"/devicemodels/id1","name":"Camera","note":"NEW Testing a camera","serial":"A020000103"}' \
  --url https://<api-url>/api/devices/id4
 
 # Check changed info 
@@ -92,7 +99,7 @@ curl --header "Content-Type: application/json" \
  --request DELETE  \
  --url https://<api-url>/api/devices/id4
 
-# Get 404 Not found 
+ # Get 404 Not found 
 curl --header "Content-Type: application/json" \
  --request GET \
  --url https://<api-url>/api/devices/id4
@@ -166,5 +173,10 @@ go tool cover -html=coverage.out
 ### Medium priority 
 - [ ] Add `handler.ListDevice` method to service and repository.
 - [ ] Add AWS::IAM::Role via Serverless, [details](https://github.com/serverless/examples/blob/22865199326008b9f863cb1ad28bfdddae9a7473/aws-node-graphql-and-rds/resource/LambdaRole.yml).
+- [ ] Improve local development with configure `serverless deploy --stage local`. Read more at: 
+  - [Use the Serverless Framework with LocalStack](https://docs.localstack.cloud/user-guide/integrations/serverless-framework/)
+  - [localstack serverless rest-api with dynamodb](https://github.com/localstack/serverless-python-rest-api-with-dynamodb)
+  - [Using Serverless Framework & Localstack to test your AWS applications locally](https://medium.com/manomano-tech/using-serverless-framework-localstack-to-test-your-aws-applications-locally-17748ffe6755)
+  - Another different way which above ways not worked, using AWS Lambda Runtime Interface Emulator (RIE).
 
  
