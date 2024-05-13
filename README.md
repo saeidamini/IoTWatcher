@@ -1,5 +1,7 @@
 # IoTWatcher
-IoTWatcher simplifies the process of tracking device health and identifying potential issues. 
+![sequence diagram for request response](./doc/IoTWatcher.png)
+
+**IoTWatcher** simplifies the process of tracking device health and identifying potential issues. 
 Operators can quickly retrieve logs for specific device states, enabling proactive maintenance and minimizing downtime. 
 Supervisors can easily monitor escalated logs, facilitating efficient resource allocation and timely issue resolution.
 
